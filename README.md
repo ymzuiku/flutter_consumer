@@ -70,3 +70,5 @@ class SomePage extends StatelessWidget {
 ```
 
 # That's all
+
+Think you read and use consumer

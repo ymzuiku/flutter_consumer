@@ -2,6 +2,15 @@
 
 flutter consumer is like [react-consumer](https://github.com/ymzuiku/react-consumer) state manage, use Stream at dart, consumer have memo and shoudWidgetUpdate function to intercept update.
 
+### Install consumer
+
+Change `pubspec.yaml`:
+
+```yaml
+dependencies:
+  consumer: ^0.1.2
+```
+
 ## Getting Started
 
 ### 1. Register Stream use state:

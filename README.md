@@ -71,4 +71,4 @@ class SomePage extends StatelessWidget {
 
 # That's all
 
-Think you read and use consumer
+Thank you read and use consumer

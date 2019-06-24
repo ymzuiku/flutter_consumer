@@ -16,9 +16,9 @@ class Store<T> {
     return _state;
   }
 
-  static T setState<T>(Function(T state) fn) {
+  static T setState<T>(Function(T state) fn, {String filter}) {
     fn(_state);
-    controller.add(_state);
+    controller.add([_state, filter]);
     return _state;
   }
 
@@ -27,7 +27,7 @@ class Store<T> {
     controller = StreamController.broadcast();
     stream = controller.stream;
     stream.listen((data) {
-      _state = data;
+      _state = data[0];
     });
   }
 }

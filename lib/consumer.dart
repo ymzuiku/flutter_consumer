@@ -18,14 +18,19 @@ class Consumer<T> extends StatefulWidget {
   final Widget Function(BuildContext context, T state) builder;
   final List Function(T state) memo;
   final bool Function(T state) shouldWidgetUpdate;
+  final String filter;
 
   Consumer(
-      {@required this.builder, this.memo, this.shouldWidgetUpdate, Key key})
+      {@required this.builder,
+      this.memo,
+      this.shouldWidgetUpdate,
+      this.filter,
+      Key key})
       : super(key: key);
 
   @override
   _ConsumerState createState() =>
-      _ConsumerState<T>(builder, memo, shouldWidgetUpdate);
+      _ConsumerState<T>(builder, memo, shouldWidgetUpdate, filter);
 }
 
 class _ConsumerState<T> extends State<Consumer> {
@@ -34,8 +39,9 @@ class _ConsumerState<T> extends State<Consumer> {
   final Widget Function(BuildContext context, T state) builder;
   final List Function(T state) memo;
   final bool Function(T state) shouldWidgetUpdate;
+  final String filter;
 
-  _ConsumerState(this.builder, this.memo, this.shouldWidgetUpdate);
+  _ConsumerState(this.builder, this.memo, this.shouldWidgetUpdate, this.filter);
 
   @override
   void initState() {
@@ -44,7 +50,16 @@ class _ConsumerState<T> extends State<Consumer> {
       lastMemo = [...memo(Store.getState<T>())];
     }
 
-    sub = Store.stream.listen((data) {
+    sub = Store.stream.listen((msgList) {
+      // 使用拦截器拦截
+      List<dynamic> list = msgList;
+      if (list.length > 1) {
+        String theFiler = list[1];
+        if (theFiler != filter) {
+          return;
+        }
+      }
+
       if (shouldWidgetUpdate != null) {
         if (shouldWidgetUpdate(Store.getState<T>()) == true) {
           setState(() {});

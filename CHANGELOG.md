@@ -1,3 +1,11 @@
+## [0.1.3] - Add filter api
+
+```dart
+Store.setState(fn, filter: 'onlyUser');
+
+Consumer(filter: 'onlyUser', builder(...));
+```
+
 ## [0.1.3] - Update readme
 
 ## [0.1.2] - Update readme

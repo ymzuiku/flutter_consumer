@@ -74,6 +74,42 @@ class SomePage extends StatelessWidget {
 }
 ```
 
+### 3. break Single data flow
+
+```dart
+class SomePage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Text('Welcome use consumer'),
+            Consumer<AppState>(
+              // only listen filter = 'onlyUser'
+              filter: 'onlyUser',
+              builder: (ctx, state) {
+                return Text('name ${state.name}');
+              },
+            ),
+            TextField(
+              onChanged: (v) {
+                // Triggle stream listen
+                Store.setState<AppState>((state) {
+                  state.name = v;
+                }, filter: 'onlyUser');
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+```
+
 # That's all
 
 Thank you read and use consumer

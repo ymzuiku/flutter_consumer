@@ -49,10 +49,7 @@ class SomePage extends StatelessWidget {
             Text('Welcome use consumer'),
             // Only update this widget
             Consumer<AppState>(
-              // [option] only at state.name changed, need update this widget.
               memo: (state) => [state.name],
-              // [option] if return true, need update this widget.
-              shouldWidgetUpdate: (state) => state.length > 3,
               builder: (ctx, state) {
                 return Text('name ${state.name}');
               },

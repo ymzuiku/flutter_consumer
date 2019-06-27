@@ -1,3 +1,5 @@
+## [0.1.4] - Delete shouldWidgetUpdate API
+
 ## [0.1.3] - Update readme
 
 ## [0.1.2] - Update readme

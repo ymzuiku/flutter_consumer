@@ -1,47 +1,19 @@
-# consumer
-
-consumer is like [react-consumer](https://github.com/ymzuiku/react-consumer) state manage, use Stream at dart.
-
-- consumer not need Provider at root Widget.
-- consumer can ease create sub StateManager at detail modules.
-- consumer use memo to intercept update, like react.Hooks.
-- consumer is tiny and ease use, only 3 API:
-  - getState
-  - setState
-  - build
-
-API Document:
-
-- [https://pub.flutter-io.cn/documentation/consumer/latest/](https://pub.flutter-io.cn/documentation/consumer/latest/)
-- [https://pub.dev/documentation/consumer/latest/](https://pub.dev/documentation/consumer/latest/)
-
-If your need use old API, please use `consumer: 0.1.4`;
-
-### Install consumer
-
-Change `pubspec.yaml`:
-
-```yaml
-dependencies:
-  consumer: ^1.0.1
-```
-
-## Getting Started
-
-It's Flutter default example, we use Consumer change StateFulWidget to StatelessWidget:
-
-```dart
 import 'package:flutter/material.dart';
+
+import '../lib/consumer.dart';
+
 void main() => runApp(MyApp());
 
-// *** definition a state ***
+// definition a state
 class ExampleState {
   int counter = 0;
 }
 
-// *** create a consumer ***
+// create a consumer
+
 var consumer = Consumer(ExampleState());
 
+// Flutter base example, StateFulWidget change to StatelessWidget
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -50,7 +22,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Consumer Demo Home Page'),
+      home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
@@ -61,7 +33,6 @@ class MyHomePage extends StatelessWidget {
   final String title;
 
   _incrementCounter() {
-    // *** Update some widget ***
     consumer.setState((state) => state.counter++);
   }
 
@@ -80,11 +51,11 @@ class MyHomePage extends StatelessWidget {
             Text(
               'You have pushed the button this many times:',
             ),
-            // *** Use consumer.build connect to widget ***
             consumer.build(
+              // use memo, we can subscribe to valid changes
               memo: (state) => [state.counter],
               builder: (ctx, state) {
-                print('Update when state.counter change');
+                print('update when state.counter change');
                 return Text(
                   '$state.counter',
                   style: Theme.of(context).textTheme.display1,
@@ -102,9 +73,3 @@ class MyHomePage extends StatelessWidget {
     );
   }
 }
-
-```
-
-# That's all
-
-Thank you read and use consumer

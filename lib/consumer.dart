@@ -2,55 +2,100 @@ library consumer;
 
 import 'dart:async';
 import 'package:flutter/material.dart';
-import './store.dart';
-
-export './store.dart';
 
 /// ## Consumer
 ///
-/// > Consumer is like react.context.consumer style's state manage widget
+/// > Consumer is like react.Consumer
+///
+/// Consumer is only one at project; it's single class.
+/// Consumer have getState, and setState.
+/// setState is trigger all stream listen, update state and call all Consumer widget update.
+class Consumer<T> {
+  T _state;
+  StreamController controller;
+  Stream stream;
+
+  Consumer(this._state) {
+    controller = StreamController.broadcast();
+    stream = controller.stream;
+    stream.listen((data) {
+      _state = data;
+    });
+  }
+
+  Widget build({
+    @required List<dynamic> Function(T s) memo,
+    @required Widget Function(BuildContext ctx, T state) builder,
+  }) {
+    return _ConsumerWidget<T>(ctrl: this, memo: memo, builder: builder);
+  }
+
+  T getState() {
+    return _state;
+  }
+
+  T setState(Function(T state) fn) {
+    fn(_state);
+    controller.add(_state);
+    return _state;
+  }
+}
+
+/// ## _ConsumerWidget
+///
+/// > _ConsumerWidget is like react.context.consumer style's state manage widget
 ///
 /// builder[required]: use return widget
 /// memo[option]: (state) => [], like react.useMemo, only array object is changed, widget can be update
 /// shouldWidgetUpdate[option]: (state) => bool, like react.shouldComponentUpdate, intercept update at return false;
-/// Consumer listen Store.stream at initState, and cancel listen at widget dispose.
-class Consumer<T> extends StatefulWidget {
+/// _ConsumerWidget listen Store.stream at initState, and cancel listen at widget dispose.
+class _ConsumerWidget<T> extends StatefulWidget {
+  final Consumer<T> ctrl;
+  final List<dynamic> Function(T state) memo;
   final Widget Function(BuildContext ctx, T state) builder;
-  final List Function(T state) memo;
 
-  Consumer({@required this.builder, @required this.memo, Key key})
+  _ConsumerWidget(
+      {@required this.ctrl,
+      @required this.builder,
+      @required this.memo,
+      Key key})
       : super(key: key);
 
   @override
-  _ConsumerState createState() => _ConsumerState<T>(builder, memo);
+  _ConsumerWidgetState createState() =>
+      _ConsumerWidgetState<T>(ctrl, memo, builder);
 }
 
-class _ConsumerState<T> extends State<Consumer> {
-  StreamSubscription sub;
-  List lastMemo;
-  final Widget Function(BuildContext ctx, T state) builder;
-  final List Function(T state) memo;
+class _ConsumerWidgetState<T> extends State<_ConsumerWidget> {
+  StreamSubscription _sub;
+  List<dynamic> _lastMemo;
+  final Consumer<T> _ctrl;
+  final List<dynamic> Function(T state) _memo;
+  final Widget Function(BuildContext ctx, T state) _builder;
 
-  _ConsumerState(this.builder, this.memo);
+  _ConsumerWidgetState(this._ctrl, this._memo, this._builder);
 
   @override
   void initState() {
     super.initState();
-    lastMemo = [...memo(Store.getState<T>())];
+    _lastMemo = [..._memo(_ctrl.getState())];
 
-    sub = Store.stream.listen((data) {
-      if (lastMemo.length > 0) {
+    _sub = _ctrl.stream.listen((data) {
+      if (_lastMemo.length > 0) {
         bool isUpdate = false;
-        List nowMemo = [...memo(Store.getState<T>())];
-        for (var i = 0; i < lastMemo.length; i++) {
-          if (lastMemo[i] != nowMemo[i]) {
+        List nowMemo = [..._memo(_ctrl.getState())];
+        for (var i = 0; i < _lastMemo.length; i++) {
+          if (_lastMemo[i] != nowMemo[i]) {
             isUpdate = true;
             break;
           }
         }
         if (isUpdate == true) {
-          lastMemo = nowMemo;
-          setState(() {});
+          if (mounted) {
+            _lastMemo = nowMemo;
+
+            setState(() {});
+          }
         }
       }
     });
@@ -59,11 +104,11 @@ class _ConsumerState<T> extends State<Consumer> {
   @override
   void dispose() {
     super.dispose();
-    sub.cancel();
+    _sub.cancel();
   }
 
   @override
   Widget build(BuildContext context) {
-    return builder(context, Store.getState<T>());
+    return _builder(context, _ctrl.getState());
   }
 }

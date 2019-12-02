@@ -4,6 +4,8 @@
 
 consumer is like [react-consumer](https://github.com/ymzuiku/react-consumer) state manage, use Stream at dart.
 
+## Feature
+
 - consumer not need Provider at root Widget.
 - consumer can ease create sub StateManager at detail modules.
 - consumer use memo to intercept update, like react.Hooks.
@@ -14,7 +16,7 @@ consumer is like [react-consumer](https://github.com/ymzuiku/react-consumer) sta
 
 API Document:
 
-- [https://pub.flutter-io.cn/documentation/consumer/latest/](https://pub.flutter-io.cn/documentation/consumer/latest/)
+- [https://pub.dev/packages/consumer](https://pub.dev/packages/consumer)
 - [https://pub.dev/documentation/consumer/latest/](https://pub.dev/documentation/consumer/latest/)
 
 If your need use old API, please use `consumer: 0.1.4`;

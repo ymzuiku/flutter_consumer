@@ -1,12 +1,12 @@
-# consumer
-
-consumer 是一个参考 [react-consumer](https://github.com/ymzuiku/react-consumer) 方式的状态管理, 使用 `Stream` 做发布订阅.
+consumer 是一个参考 [react-consumer](https://github.com/ymzuiku/react-consumer) 方式的状态管理, 使用 dart 的 `Stream` 做发布订阅.
 
 类 react 项目，当项目到一定程度，必不可少需要一个状态管理器，flutter 有着不少状态管理库，BLOC、Provider、redux 等等；但是他们现有的问题是没有给出很便捷的状态管理优化方案。
 
 在这个前提下，我们会发现若项目足够大，我们需要切分多个子状态管理，或者一些局部的状态管理，这样可以有效减少事件派发的影响范围，从而提高性能；consumer 另一个特点是强制使用者描述每个订阅所使用的对象，这样 consumer 可以帮助优化性能，拦截不必要的更新。
 
 consumer 的特点是仅仅是发布订阅模式加 StateFulWidget，这比市面上基于 InheritedWidget 进行封装的状态管理器的优势是它不需要一个顶层的提供者模式的包裹。基于此，consumer 可以让项目更简单创建子模块的独立的状态管理，当然你也可以使用 consumer 的单一模式管理整个项目的状态。
+
+## Feature
 
 - consumer 不需要一个顶层的 Provider 包裹对象；
 - consumer 可以很轻松的给子模块设置独立的状态管理；
@@ -18,8 +18,8 @@ consumer 的特点是仅仅是发布订阅模式加 StateFulWidget，这比市�
 
 API 文档:
 
+- [https://pub.flutter-io.cn/packages/consumer](https://pub.flutter-io.cn/packages/consumer)
 - [https://pub.flutter-io.cn/documentation/consumer/latest/](https://pub.flutter-io.cn/documentation/consumer/latest/)
-- [https://pub.dev/documentation/consumer/latest/](https://pub.dev/documentation/consumer/latest/)
 
 ### 安装 consumer
 

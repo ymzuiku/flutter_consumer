@@ -25,7 +25,7 @@ Change `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  consumer: ^1.0.1
+  consumer: ^1.0.2
 ```
 
 ## Getting Started

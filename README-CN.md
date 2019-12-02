@@ -27,7 +27,7 @@ API 文档:
 
 ```yaml
 dependencies:
-  consumer: ^1.0.1
+  consumer: ^1.0.2
 ```
 
 ## 入门指南

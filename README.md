@@ -1,5 +1,7 @@
 # consumer
 
+[中文文档](./README-CN.md)
+
 consumer is like [react-consumer](https://github.com/ymzuiku/react-consumer) state manage, use Stream at dart.
 
 - consumer not need Provider at root Widget.

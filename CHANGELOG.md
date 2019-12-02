@@ -1,3 +1,5 @@
+## [1.0.2] - Add Chinese README-CN.md
+
 ## [1.0.1] - Update readme
 
 ## [1.0.0] - Update readme

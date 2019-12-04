@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 /// Consumer is only one at project; it's single class.
 /// Consumer have getState, and setState.
 /// setState is trigger all stream listen, update state and call all Consumer widget update.
+/// build is use _ConsumerWidget create a StatefulWidget, and subscribe consumer at _ConsumerWidget.
 class Consumer<T> {
   T _state;
   StreamController controller;
@@ -46,8 +47,7 @@ class Consumer<T> {
 /// > _ConsumerWidget is like react.context.consumer style's state manage widget
 ///
 /// builder[required]: use return widget
-/// memo[option]: (state) => [], like react.useMemo, only array object is changed, widget can be update
-/// shouldWidgetUpdate[option]: (state) => bool, like react.shouldComponentUpdate, intercept update at return false;
+/// memo[required]: (state) => [], like react.useMemo, only array object is changed, widget can be update
 /// _ConsumerWidget listen Store.stream at initState, and cancel listen at widget dispose.
 class _ConsumerWidget<T> extends StatefulWidget {
   final Consumer<T> ctrl;

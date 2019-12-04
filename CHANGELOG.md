@@ -1,3 +1,9 @@
+## [1.0.4] - Update Dart DOC
+
+## [1.0.3] - Update readme
+
+- Add FAQ
+
 ## [1.0.2] - Add Chinese README-CN.md
 
 ## [1.0.1] - Update readme

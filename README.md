@@ -8,7 +8,7 @@ consumer is like [react-consumer](https://github.com/ymzuiku/react-consumer) sta
 
 - consumer not need Provider at root Widget.
 - consumer can ease create sub StateManager at detail modules.
-- consumer use memo to intercept update, like react.Hooks.
+- consumer use `memo` to intercept update, like react.Hooks.
 - consumer is tiny and ease use, only 3 API:
   - getState
   - setState
@@ -107,6 +107,166 @@ class MyHomePage extends StatelessWidget {
   }
 }
 
+```
+
+## About `memo` detail
+
+If your project have very many state's subscribe, use `memo` can significantly improved performance.
+
+`memo` param is learn by react.Hooks, there have some example:
+
+If we have two consumer.build widget:
+
+```dart
+// *** definition a state ***
+class ExampleState {
+  int age = 0;
+  String name = 'dog';
+}
+
+// *** create a consumer ***
+var consumer = Consumer(ExampleState());
+
+Column(
+  children: <Widget>[
+    consumer.build(
+      memo: (state) => [state.age],
+      builder: (ctx, state) {
+        print('Update when state.age change');
+        return Text(
+          '$state.age',
+          style: Theme.of(context).textTheme.display1,
+        );
+      },
+    ),
+    consumer.build(
+      memo: (state) => [state.name],
+      builder: (ctx, state) {
+        print('Update when state.name change');
+        return Text(
+          state.name,
+          style: Theme.of(context).textTheme.display1,
+        );
+      },
+    ),
+  ],
+);
+```
+
+We update state.name, Only update use `memo: (state) => [state.name]` the widget:
+
+```dart
+consumer.setState((state){
+  state.name = 'cat';
+});
+```
+
+## Why not update widget before `consumer.setState`?
+
+Maybe your use `state.name`, bug `memo` not subscribe `state.name`:
+
+```dart
+Center(
+  child: consumer.build(
+    memo: (state) => [state.age],
+    builder: (ctx, state) {
+      return Text(
+        state.name,
+        style: Theme.of(context).textTheme.display1,
+      );
+    },
+  ),
+);
+```
+
+Maybe `memo` not return anything:
+
+```dart
+Center(
+  child: consumer.build(
+    memo: (state) => [],
+    builder: (ctx, state) {
+      return Text(
+        state.name,
+        style: Theme.of(context).textTheme.display1,
+      );
+    },
+  ),
+);
+```
+
+Maybe your only change List or Map, bu not set new List or Map:
+
+```dart
+class ExampleState {
+  List<String> names = ['dog', 'cat'];
+}
+
+var consumer = Consumer(ExampleState());
+
+Center(
+  child: consumer.build(
+    memo: (state) => [state.names],
+    builder: (ctx, state) {
+      return Text(
+        state.names[0],
+        style: Theme.of(context).textTheme.display1,
+      );
+    },
+  ),
+);
+
+// Error update:
+Consumer.setState((state){
+  state.names[0] = 'fish'
+});
+
+// right update:
+Consumer.setState((state){
+  List<String> names = [...state.names];
+  names[0] = 'fish'
+  state.names = names;
+});
+```
+
+## State Skills
+
+If your need change data before update, you can add function props at State.
+
+This have change List data's example:
+
+```dart
+// *** definition a state ***
+class ExampleState {
+  int lastChangeNamesIndex;
+  List<String> names = ['dog', 'cat'];
+
+  changeNameAt(int index, String name) {
+    lastChangeNamesIndex = index;
+    List<String> nextNames = [...names];
+    nextNames[index] = name;
+    names = nextNames;
+  }
+}
+
+var consumer = Consumer(ExampleState());
+
+Center(
+  child: consumer.build(
+    memo: (state) => [state.names, state.lastChangeNamesIndex],
+    builder: (ctx, state) {
+      return Text(
+        state.names[state.lastChangeNamesIndex],
+        style: Theme.of(context).textTheme.display1,
+      );
+    },
+  ),
+);
+
+// ease update names and lastChangeNamesIndex
+consumer.setState((state){
+  state.changeNameAt(0, 'monkey');
+})
 ```
 
 # That's all

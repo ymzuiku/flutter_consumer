@@ -10,7 +10,7 @@ consumer 的特点是仅仅是发布订阅模式加 StateFulWidget，这比市�
 
 - consumer 不需要一个顶层的 Provider 包裹对象；
 - consumer 可以很轻松的给子模块设置独立的状态管理；
-- consumer 使用 memo 拦截不必要的更新，从 react.Hooks 得到的灵感;
+- consumer 使用 `memo` 拦截不必要的更新，从 react.Hooks 得到的灵感;
 - consumer 非常易于使用, 仅有 3 个 API:
   - getState
   - setState
@@ -108,6 +108,172 @@ class MyHomePage extends StatelessWidget {
   }
 }
 
+```
+
+## FAQ
+
+### 参数 `memo` 的作用是什么？
+
+如果你项目有着非常多的状态订阅，使用 `memo` 可以大幅度提高性能；所以 `memo` 设计为必须定义的参数。
+
+`memo` 的概念是来自于 react.Hooks, 它用来描述监听变化的对象，仅有监听对象变化时，才会派发更新。
+
+一个原则是，我们在 builder 对象中需要使用什么属性，`memo` 返回的数组就定义什么属性, 我们这里有一些例子：
+
+如果我们由 consumer.build 创建的两个 widget：
+
+```dart
+// *** definition a state ***
+class ExampleState {
+  List<String> animates = [];
+  int age = 0;
+  String name = 'dog';
+}
+
+// *** create a consumer ***
+var consumer = Consumer(ExampleState());
+
+Column(
+  children: <Widget>[
+    consumer.build(
+      memo: (state) => [state.age, state.animates],
+      builder: (ctx, state) {
+        print('Update when state.age change');
+        return Text(
+          '$state.age',
+          style: Theme.of(context).textTheme.display1,
+        );
+      },
+    ),
+    consumer.build(
+      memo: (state) => [state.name],
+      builder: (ctx, state) {
+        print('Update when state.name change');
+        return Text(
+          state.name,
+          style: Theme.of(context).textTheme.display1,
+        );
+      },
+    ),
+  ],
+);
+```
+
+然后我们更新 state.name:
+
+```dart
+consumer.setState((state){
+  state.name = 'cat';
+});
+```
+
+此时，当我们更新 `state.name`，只有订阅了 `memo: (state) => [state.name]` 的 widget 会更新，其他 Widget 的更新都会被 consumer 拦截。
+
+### 为什么我的使用了 `consumer.setState` 之后 Widget 并没有更新？
+
+或许你在 `builder` 中使用了 `state.name`, 不过 `memo` 返回的数组未包含 `state.name`:
+
+```dart
+Center(
+  child: consumer.build(
+    memo: (state) => [state.age],
+    builder: (ctx, state) {
+      return Text(
+        state.name,
+        style: Theme.of(context).textTheme.display1,
+      );
+    },
+  ),
+);
+```
+
+或许你的 `memo` 未监听任何对象:
+
+```dart
+Center(
+  child: consumer.build(
+    memo: (state) => [],
+    builder: (ctx, state) {
+      return Text(
+        state.name,
+        style: Theme.of(context).textTheme.display1,
+      );
+    },
+  ),
+);
+```
+
+或许你仅仅是改变了 List 或 Map 内的对象，但是没有重新设定一个新的 List 或 Map：
+
+```dart
+class ExampleState {
+  List<String> names = ['dog', 'cat'];
+}
+
+var consumer = Consumer(ExampleState());
+
+Center(
+  child: consumer.build(
+    memo: (state) => [state.names],
+    builder: (ctx, state) {
+      return Text(
+        state.names[0],
+        style: Theme.of(context).textTheme.display1,
+      );
+    },
+  ),
+);
+
+// 错误的更新:
+Consumer.setState((state){
+  state.names[0] = 'fish'
+});
+
+// 正确的更新:
+Consumer.setState((state){
+  List<String> names = [...state.names];
+  names[0] = 'fish'
+  state.names = names;
+});
+```
+
+### State 小技巧
+
+如果你需要在更新之前做一些计算, 或者更方便处理数组之类的更新，你可以创建一些函数属性给 State：
+
+这里有一个修改 List 数据的例子：
+
+```dart
+class ExampleState {
+  int lastChangeNamesIndex;
+  List<String> names = ['dog', 'cat'];
+
+  changeNameAt(int index, String name) {
+    lastChangeNamesIndex = index;
+    List<String> nextNames = [...names];
+    nextNames[index] = name;
+    names = nextNames;
+  }
+}
+
+var consumer = Consumer(ExampleState());
+
+Center(
+  child: consumer.build(
+    memo: (state) => [state.names, state.lastChangeNamesIndex],
+    builder: (ctx, state) {
+      return Text(
+        state.names[state.lastChangeNamesIndex],
+        style: Theme.of(context).textTheme.display1,
+      );
+    },
+  ),
+);
+
+// 轻松更新 names 和 lastChangeNamesIndex
+consumer.setState((state){
+  state.changeNameAt(0, 'monkey');
+})
 ```
 
 # That's all

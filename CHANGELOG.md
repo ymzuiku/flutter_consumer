@@ -1,3 +1,5 @@
+## [1.0.5] - Public Consumer.state
+
 ## [1.0.4] - Update Dart DOC
 
 ## [1.0.3] - Update readme

@@ -12,15 +12,15 @@ import 'package:flutter/material.dart';
 /// setState is trigger all stream listen, update state and call all Consumer widget update.
 /// build is use _ConsumerWidget create a StatefulWidget, and subscribe consumer at _ConsumerWidget.
 class Consumer<T> {
-  T _state;
+  T state;
   StreamController controller;
   Stream stream;
 
-  Consumer(this._state) {
+  Consumer(this.state) {
     controller = StreamController.broadcast();
     stream = controller.stream;
     stream.listen((data) {
-      _state = data;
+      state = data;
     });
   }
 
@@ -32,13 +32,13 @@ class Consumer<T> {
   }
 
   T getState() {
-    return _state;
+    return state;
   }
 
   T setState(Function(T state) fn) {
-    fn(_state);
-    controller.add(_state);
-    return _state;
+    fn(state);
+    controller.add(state);
+    return state;
   }
 }
 
@@ -54,16 +54,10 @@ class _ConsumerWidget<T> extends StatefulWidget {
   final List<dynamic> Function(T state) memo;
   final Widget Function(BuildContext ctx, T state) builder;
 
-  _ConsumerWidget(
-      {@required this.ctrl,
-      @required this.builder,
-      @required this.memo,
-      Key key})
-      : super(key: key);
+  _ConsumerWidget({@required this.ctrl, @required this.builder, @required this.memo, Key key}) : super(key: key);
 
   @override
-  _ConsumerWidgetState createState() =>
-      _ConsumerWidgetState<T>(ctrl, memo, builder);
+  _ConsumerWidgetState createState() => _ConsumerWidgetState<T>(ctrl, memo, builder);
 }
 
 class _ConsumerWidgetState<T> extends State<_ConsumerWidget> {

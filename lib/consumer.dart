@@ -24,10 +24,7 @@ class Consumer<T> {
     });
   }
 
-  Widget build({
-    List<dynamic> Function(T s) memo,
-    @required Widget Function(BuildContext ctx, T state) builder,
-  }) {
+  Widget build(Widget Function(BuildContext ctx, T state) builder, {List<dynamic> Function(T s) memo}) {
     return _ConsumerWidget<T>(ctrl: this, memo: memo, builder: builder);
   }
 

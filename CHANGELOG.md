@@ -1,3 +1,20 @@
+## [2.0.0] - change build API
+
+Before:
+
+```dart
+Widget build({
+  List<dynamic> Function(T s) memo,
+  @required Widget Function(BuildContext ctx, T state) builder,
+});
+```
+
+After:
+
+```dart
+Widget build(Widget Function(BuildContext ctx, T state) builder, {List<dynamic> Function(T s) memo});
+```
+
 ## [1.0.6] - memo param is option
 
 ## [1.0.5] - Public Consumer.state

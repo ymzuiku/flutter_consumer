@@ -85,16 +85,12 @@ class MyHomePage extends StatelessWidget {
               'You have pushed the button this many times:',
             ),
             // *** Use consumer.build connect to widget ***
-            consumer.build(
-              memo: (state) => [state.counter],
-              builder: (ctx, state) {
-                print('Update when state.counter change');
-                return Text(
-                  '$state.counter',
-                  style: Theme.of(context).textTheme.display1,
-                );
-              },
-            ),
+            consumer.build((ctx, state) {
+              return Text(
+                '$state.counter',
+                style: Theme.of(context).textTheme.display1,
+              );
+            }),
           ],
         ),
       ),
@@ -129,25 +125,23 @@ var consumer = Consumer(ExampleState());
 
 Column(
   children: <Widget>[
-    consumer.build(
-      memo: (state) => [state.age],
-      builder: (ctx, state) {
+    consumer.build((ctx, state) {
         print('Update when state.age change');
         return Text(
           '$state.age',
           style: Theme.of(context).textTheme.display1,
         );
       },
+      memo: (state) => [state.age],
     ),
-    consumer.build(
-      memo: (state) => [state.name],
-      builder: (ctx, state) {
+    consumer.build((ctx, state) {
         print('Update when state.name change');
         return Text(
           state.name,
           style: Theme.of(context).textTheme.display1,
         );
       },
+      memo: (state) => [state.name],
     ),
   ],
 );
@@ -167,14 +161,13 @@ Maybe your use `state.name`, bug `memo` not subscribe `state.name`:
 
 ```dart
 Center(
-  child: consumer.build(
-    memo: (state) => [state.age],
-    builder: (ctx, state) {
+  child: consumer.build((ctx, state) {
       return Text(
         state.name,
         style: Theme.of(context).textTheme.display1,
       );
     },
+    memo: (state) => [state.age],
   ),
 );
 ```
@@ -183,14 +176,13 @@ Maybe `memo` not return anything:
 
 ```dart
 Center(
-  child: consumer.build(
-    memo: (state) => [],
-    builder: (ctx, state) {
+  child: consumer.build((ctx, state) {
       return Text(
         state.name,
         style: Theme.of(context).textTheme.display1,
       );
     },
+    memo: (state) => [],
   ),
 );
 ```
@@ -205,14 +197,13 @@ class ExampleState {
 var consumer = Consumer(ExampleState());
 
 Center(
-  child: consumer.build(
-    memo: (state) => [state.names],
-    builder: (ctx, state) {
+  child: consumer.build((ctx, state) {
       return Text(
         state.names[0],
         style: Theme.of(context).textTheme.display1,
       );
     },
+    memo: (state) => [state.names],
   ),
 );
 
@@ -252,14 +243,13 @@ class ExampleState {
 var consumer = Consumer(ExampleState());
 
 Center(
-  child: consumer.build(
-    memo: (state) => [state.names, state.lastChangeNamesIndex],
-    builder: (ctx, state) {
+  child: consumer.build((ctx, state) {
       return Text(
         state.names[state.lastChangeNamesIndex],
         style: Theme.of(context).textTheme.display1,
       );
     },
+    memo: (state) => [state.names, state.lastChangeNamesIndex],
   ),
 );
 

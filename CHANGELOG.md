@@ -1,3 +1,5 @@
+## [1.0.6] - memo param is option
+
 ## [1.0.5] - Public Consumer.state
 
 ## [1.0.4] - Update Dart DOC

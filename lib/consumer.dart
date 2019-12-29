@@ -25,7 +25,7 @@ class Consumer<T> {
   }
 
   Widget build({
-    @required List<dynamic> Function(T s) memo,
+    List<dynamic> Function(T s) memo,
     @required Widget Function(BuildContext ctx, T state) builder,
   }) {
     return _ConsumerWidget<T>(ctrl: this, memo: memo, builder: builder);
@@ -72,9 +72,15 @@ class _ConsumerWidgetState<T> extends State<_ConsumerWidget> {
   @override
   void initState() {
     super.initState();
-    _lastMemo = [..._memo(_ctrl.getState())];
+    if (_memo != null) {
+      _lastMemo = [..._memo(_ctrl.getState())];
+    }
 
     _sub = _ctrl.stream.listen((data) {
+      if (_memo == null) {
+        setState(() {});
+        return;
+      }
       if (_lastMemo.length > 0) {
         bool isUpdate = false;
         List nowMemo = [..._memo(_ctrl.getState())];

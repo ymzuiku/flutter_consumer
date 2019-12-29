@@ -1,5 +1,7 @@
 ## [2.0.0] - change build API
 
+`consumer.build`:
+
 Before:
 
 ```dart

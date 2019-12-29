@@ -27,7 +27,7 @@ API 文档:
 
 ```yaml
 dependencies:
-  consumer: ^1.0.2
+  consumer: ^2.0.0
 ```
 
 ## 入门指南
@@ -266,6 +266,25 @@ Center(
 consumer.setState((state){
   state.changeNameAt(0, 'monkey');
 })
+```
+
+## 2.0.0 的 API 变更
+
+`consumer.build`:
+
+Before:
+
+```dart
+Widget build({
+  List<dynamic> Function(T s) memo,
+  @required Widget Function(BuildContext ctx, T state) builder,
+});
+```
+
+After:
+
+```dart
+Widget build(Widget Function(BuildContext ctx, T state) builder, {List<dynamic> Function(T s) memo});
 ```
 
 # That's all

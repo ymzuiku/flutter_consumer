@@ -112,7 +112,7 @@ class MyHomePage extends StatelessWidget {
 
 `memo` 参数是可选的； 如果我们不设置此参数，consumer 只要执行 setState，就都会更新组件；
 
-如果你项目有着非常多的状态订阅，使用 `memo` 可以大幅度提高性能；所以 `memo` 设计为必须定义的参数。
+如果你项目有着非常多的状态订阅，使用 `memo` 可以大幅度提高性能.
 
 `memo` 的概念是来自于 react.Hooks, 它用来描述监听变化的对象，仅有监听对象变化时，才会派发更新。
 

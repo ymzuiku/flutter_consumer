@@ -1,4 +1,10 @@
-## [2.0.0] - change build API
+## [2.0.2] - Update readme
+
+## [2.0.1] - Add Deprecated to getState
+
+@Deprecated('remove getState to v2.2.0, use consumer.state replace consumer.getState()')
+
+## [2.0.0] - Change build API
 
 `consumer.build`:
 

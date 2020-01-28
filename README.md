@@ -10,7 +10,7 @@ consumer is like [react-consumer](https://github.com/ymzuiku/react-consumer) sta
 - consumer can ease create sub StateManager at detail modules.
 - consumer use `memo` to intercept update, like react.Hooks.
 - consumer is tiny and ease use, only 3 API:
-  - getState
+  - state
   - setState
   - build
 

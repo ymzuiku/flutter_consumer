@@ -28,6 +28,7 @@ class Consumer<T> {
     return _ConsumerWidget<T>(ctrl: this, memo: memo, builder: builder);
   }
 
+  @Deprecated('remove getState to v2.2.0, use consumer.state replace consumer.getState()')
   T getState() {
     return state;
   }
@@ -70,7 +71,7 @@ class _ConsumerWidgetState<T> extends State<_ConsumerWidget> {
   void initState() {
     super.initState();
     if (_memo != null) {
-      _lastMemo = [..._memo(_ctrl.getState())];
+      _lastMemo = [..._memo(_ctrl.state)];
     }
 
     _sub = _ctrl.stream.listen((data) {
@@ -80,7 +81,7 @@ class _ConsumerWidgetState<T> extends State<_ConsumerWidget> {
       }
       if (_lastMemo.length > 0) {
         bool isUpdate = false;
-        List nowMemo = [..._memo(_ctrl.getState())];
+        List nowMemo = [..._memo(_ctrl.state)];
         for (var i = 0; i < _lastMemo.length; i++) {
           if (_lastMemo[i] != nowMemo[i]) {
             isUpdate = true;
@@ -106,6 +107,6 @@ class _ConsumerWidgetState<T> extends State<_ConsumerWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return _builder(context, _ctrl.getState());
+    return _builder(context, _ctrl.state);
   }
 }

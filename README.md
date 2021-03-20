@@ -6,11 +6,11 @@ consumer is like [react-consumer](https://github.com/ymzuiku/react-consumer) sta
 
 ## Feature
 
+- consumer only use StatelessWidget create full app.
 - consumer not need Provider at root Widget.
 - consumer can ease create sub StateManager at detail modules.
 - consumer use `memo` to intercept update, like react.Hooks.
-- consumer is tiny and ease use, only 3 API:
-  - state
+- consumer is tiny and ease use, only 2 API:
   - setState
   - build
 
@@ -27,7 +27,7 @@ Change `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  consumer: ^2.0.0
+  consumer: ^2.2.0
 ```
 
 ## Getting Started
@@ -85,12 +85,16 @@ class MyHomePage extends StatelessWidget {
               'You have pushed the button this many times:',
             ),
             // *** Use consumer.build connect to widget ***
-            consumer.build((ctx, state) {
+            consumer.build(
+              (ctx, state) {
               return Text(
-                '$state.counter',
-                style: Theme.of(context).textTheme.display1,
-              );
-            }),
+                  state.counter.toString(),
+                  style: Theme.of(context).textTheme.headline4,
+                );
+              },
+              // 需要声明 consumer.build 中使用过的 state 属性
+              memo:(state)=>[state.counter],
+            ),
           ],
         ),
       ),
@@ -128,8 +132,8 @@ Column(
     consumer.build((ctx, state) {
         print('Update when state.age change');
         return Text(
-          '$state.age',
-          style: Theme.of(context).textTheme.display1,
+          state.age.toString(),
+          style: Theme.of(context).textTheme.headline4,
         );
       },
       memo: (state) => [state.age],
@@ -138,7 +142,7 @@ Column(
         print('Update when state.name change');
         return Text(
           state.name,
-          style: Theme.of(context).textTheme.display1,
+          style: Theme.of(context).textTheme.headline4,
         );
       },
       memo: (state) => [state.name],
@@ -153,6 +157,98 @@ We update state.name, Only update use `memo: (state) => [state.name]` the widget
 consumer.setState((state){
   state.name = 'cat';
 });
+```
+
+## Full example with consumer
+
+`lib/consumer.dart`
+
+```dart
+import 'package:consumer/consumer.dart';
+
+class ExampleState {
+  int counter = 0;
+  String time = DateTime.now().toString();
+}
+
+var consumer = Consumer(ExampleState());
+```
+
+`lib/main.dart`: use consumer
+
+```dart
+import 'package:flutter/material.dart';
+import './consumer.dart';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Material App',
+      theme: ThemeData(primaryColor: Colors.blue),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("hello"),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('counter:'),
+              consumer.build(
+                (ctx, state) {
+                  print("update state.counter");
+                  return Text(
+                    state.counter.toString(),
+                    style: Theme.of(ctx).textTheme.headline4,
+                  );
+                },
+                memo: (state) => [state.counter],
+              ),
+              Container(
+                child: TextButton(
+                  onPressed: () {
+                    consumer.setState((state) {
+                      state.counter += 1;
+                    });
+                  },
+                  child: Text("Only Change counter",
+                      style: TextStyle(fontSize: 24)),
+                ),
+                margin: EdgeInsets.only(top: 20, bottom: 40),
+              ),
+              Text('time:'),
+              consumer.build(
+                (ctx, state) {
+                  print("update state.time");
+                  return Text(
+                    state.time.toString(),
+                    style: Theme.of(ctx).textTheme.headline4,
+                  );
+                },
+                memo: (state) => [state.time],
+              ),
+              Container(
+                child: TextButton(
+                  onPressed: () {
+                    consumer.setState((state) {
+                      state.time = DateTime.now().toString();
+                    });
+                  },
+                  child:
+                      Text("Only Change time", style: TextStyle(fontSize: 24)),
+                ),
+                margin: EdgeInsets.only(top: 20),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 ```
 
 ## Why not update widget before `consumer.setState`?
@@ -259,7 +355,35 @@ consumer.setState((state){
 })
 ```
 
-## 2.0.0 API change:
+## API changes:
+
+### 2.2.0 API change:
+
+memo: change to required
+
+`consumer.build`:
+
+Before:
+
+```dart
+Widget build(
+  Widget Function(BuildContext ctx, T state) builder,
+  {List<dynamic> Function(T s) memo}
+);
+```
+
+After:
+
+```dart
+Widget build(
+  Widget Function(BuildContext ctx, T state) builder,
+  {@required List<dynamic> Function(T s) memo}
+);
+```
+
+`consumer.getState`: remove the API.
+
+### 2.0.0 API change:
 
 `consumer.build`:
 

@@ -1,7 +1,7 @@
 name: consumer
 description: consumer is like react-consumer state manage, use Stream at dart, consumer have memo and shoudWidgetUpdate function to intercept update.
-version: 2.0.2
-author: pillar<pillar@gmail.com>
+version: 2.2.0
+author: pillar<ymblender@gmail.com>
 homepage: https://github.com/ymzuiku/flutter_consumer
 
 environment:

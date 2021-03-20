@@ -8,11 +8,11 @@ consumer 的特点是仅仅是发布订阅模式加 StateFulWidget，这比市�
 
 ## Feature
 
+- consumer 可以使用 StatelessWidget 组件完成大部分业务；
 - consumer 不需要一个顶层的 Provider 包裹对象；
 - consumer 可以很轻松的给子模块设置独立的状态管理；
 - consumer 使用 `memo` 拦截不必要的更新，从 react.Hooks 得到的灵感;
-- consumer 非常易于使用, 仅有 3 个 API:
-  - getState
+- consumer 非常易于使用, 仅有 2 个 API:
   - setState
   - build
 
@@ -27,7 +27,7 @@ API 文档:
 
 ```yaml
 dependencies:
-  consumer: ^2.0.0
+  consumer: ^2.2.0
 ```
 
 ## 入门指南
@@ -88,10 +88,10 @@ class MyHomePage extends StatelessWidget {
             // *** 使用 consumer.build 订阅一个组件 ***
             consumer.build((ctx, state) {
               return Text(
-                '$state.counter',
+                state.counter.toString(),
                 style: Theme.of(context).textTheme.display1,
               );
-            }),
+            }, memo:()=>[state.counter]),
           ],
         ),
       ),
@@ -106,11 +106,9 @@ class MyHomePage extends StatelessWidget {
 
 ```
 
-## FAQ
+## 参数 `memo` 的作用是什么？
 
-### 参数 `memo` 的作用是什么？
-
-`memo` 参数是可选的； 如果我们不设置此参数，consumer 只要执行 setState，就都会更新组件；
+从 `v2.2.0` 版本开始 `memo` 参数是必传的；
 
 如果你项目有着非常多的状态订阅，使用 `memo` 可以大幅度提高性能.
 
@@ -165,7 +163,101 @@ consumer.setState((state){
 
 此时，当我们更新 `state.name`，只有订阅了 `memo: (state) => [state.name]` 的 widget 会更新，其他 Widget 的更新都会被 consumer 拦截。
 
-### 为什么我的使用了 `consumer.setState` 之后 Widget 并没有更新？
+## 完整的使用 consumer 配合 memo 拦截更新的例子
+
+一般来说使用状态管理都会涉及到跨组件更新，consumer 建议您把相关组件使用的状态放到一个文件中，在不同的组件中进行引用:
+
+`lib/consumer.dart`: 声明状态和状态消费者
+
+```dart
+import 'package:consumer/consumer.dart';
+
+class ExampleState {
+  int counter = 0;
+  String time = DateTime.now().toString();
+}
+
+var consumer = Consumer(ExampleState());
+```
+
+`lib/main.dart`: 使用状态消费者，绘制需要被状态接管的组件
+
+```dart
+import 'package:flutter/material.dart';
+import './consumer.dart';
+
+void main() => runApp(MyApp());
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Material App',
+      theme: ThemeData(primaryColor: Colors.blue),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("hello"),
+        ),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('counter:'),
+              consumer.build(
+                (ctx, state) {
+                  print("update state.counter");
+                  return Text(
+                    state.counter.toString(),
+                    style: Theme.of(ctx).textTheme.headline4,
+                  );
+                },
+                memo: (state) => [state.counter],
+              ),
+              Container(
+                child: TextButton(
+                  onPressed: () {
+                    consumer.setState((state) {
+                      state.counter += 1;
+                    });
+                  },
+                  child: Text("Only Change counter",
+                      style: TextStyle(fontSize: 24)),
+                ),
+                margin: EdgeInsets.only(top: 20, bottom: 40),
+              ),
+              Text('time:'),
+              consumer.build(
+                (ctx, state) {
+                  print("update state.time");
+                  return Text(
+                    state.time.toString(),
+                    style: Theme.of(ctx).textTheme.headline4,
+                  );
+                },
+                memo: (state) => [state.time],
+              ),
+              Container(
+                child: TextButton(
+                  onPressed: () {
+                    consumer.setState((state) {
+                      state.time = DateTime.now().toString();
+                    });
+                  },
+                  child:
+                      Text("Only Change time", style: TextStyle(fontSize: 24)),
+                ),
+                margin: EdgeInsets.only(top: 20),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+
+## 为什么我的使用了 `consumer.setState` 之后 Widget 并没有更新？
 
 或许你在 `builder` 中使用了 `state.name`, 不过 `memo` 返回的数组未包含 `state.name`:
 
@@ -266,25 +358,6 @@ Center(
 consumer.setState((state){
   state.changeNameAt(0, 'monkey');
 })
-```
-
-## 2.0.0 的 API 变更
-
-`consumer.build`:
-
-Before:
-
-```dart
-Widget build({
-  List<dynamic> Function(T s) memo,
-  @required Widget Function(BuildContext ctx, T state) builder,
-});
-```
-
-After:
-
-```dart
-Widget build(Widget Function(BuildContext ctx, T state) builder, {List<dynamic> Function(T s) memo});
 ```
 
 # That's all

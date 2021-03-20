@@ -53,14 +53,14 @@ class MyHomePage extends StatelessWidget {
             ),
             consumer.build(
               // use memo, we can subscribe to valid changes
-              memo: (state) => [state.counter],
-              builder: (ctx, state) {
+              (ctx, state) {
                 print('update when state.counter change');
                 return Text(
                   '$state.counter',
-                  style: Theme.of(context).textTheme.display1,
+                  style: Theme.of(context).textTheme.headline4,
                 );
               },
+              memo: (state) => [state.counter],
             ),
           ],
         ),

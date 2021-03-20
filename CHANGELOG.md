@@ -1,3 +1,29 @@
+## [2.2.0] - API CHANGES
+
+memo: change to required
+
+`consumer.build`:
+
+Before:
+
+```dart
+Widget build(
+  Widget Function(BuildContext ctx, T state) builder,
+  {List<dynamic> Function(T s) memo}
+);
+```
+
+After:
+
+```dart
+Widget build(
+  Widget Function(BuildContext ctx, T state) builder,
+  {@required List<dynamic> Function(T s) memo}
+);
+```
+
+`consumer.getState`: remove the API.
+
 ## [2.0.2] - Update readme
 
 ## [2.0.1] - Add Deprecated to getState

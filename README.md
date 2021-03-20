@@ -355,53 +355,6 @@ consumer.setState((state){
 })
 ```
 
-## API changes:
-
-### 2.2.0 API change:
-
-memo: change to required
-
-`consumer.build`:
-
-Before:
-
-```dart
-Widget build(
-  Widget Function(BuildContext ctx, T state) builder,
-  {List<dynamic> Function(T s) memo}
-);
-```
-
-After:
-
-```dart
-Widget build(
-  Widget Function(BuildContext ctx, T state) builder,
-  {@required List<dynamic> Function(T s) memo}
-);
-```
-
-`consumer.getState`: remove the API.
-
-### 2.0.0 API change:
-
-`consumer.build`:
-
-Before:
-
-```dart
-Widget build({
-  List<dynamic> Function(T s) memo,
-  @required Widget Function(BuildContext ctx, T state) builder,
-});
-```
-
-After:
-
-```dart
-Widget build(Widget Function(BuildContext ctx, T state) builder, {List<dynamic> Function(T s) memo});
-```
-
 # That's all
 
 Thank you read and use consumer

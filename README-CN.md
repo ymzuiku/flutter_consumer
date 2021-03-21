@@ -1,6 +1,6 @@
 若你觉得 Provider 等状态管理太繁琐， consumer 就是为你准备的一款高性能、极简的状态管理库。
 
-consumer 是一个参考 [react-consumer](https://github.com/ymzuiku/react-consumer) 方式的状态管理, 使用 dart 的 `Stream` 做发布订阅.
+consumer 是一个参考 [react-consumer](https://github.com/ymzuiku/react-consumer) 方式的状态管理, 使用 dart 的 `Stream` 做发布订阅，配合可变状态的微件（类似于 TextField 组件）进行状态管理.
 
 声明式风格的前端项目，当项目到一定程度，必不可少需要一个状态管理器，flutter 有着不少状态管理库，BLOC、Provider、redux 等等；但是他们现有的问题是没有给出很便捷的状态管理优化方案。
 
@@ -84,7 +84,7 @@ class MyHomePage extends StatelessWidget {
             Text(
               'You have pushed the button this many times:',
             ),
-            // *** 使用 consumer.build 订阅一个组件 ***
+            // *** 使用 consumer.build 生成一个可变状态微件 ***
             consumer.build((ctx, state) {
               return Text(
                 state.counter.toString(),

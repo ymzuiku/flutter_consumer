@@ -10,13 +10,10 @@ consumer 的特点是仅仅是发布订阅模式加 StateFulWidget，这比市�
 
 ## Feature
 
-- consumer 可以使用 StatelessWidget 组件完成大部分业务；
-- consumer 不需要一个顶层的 Provider 包裹对象；
-- consumer 可以很轻松的给子模块设置独立的状态管理；
-- consumer 使用 `memo` 拦截不必要的更新，从 react.Hooks 得到的灵感;
-- consumer 非常易于使用, 仅有 2 个 API:
-  - setState
-  - build
+- 仅更新数据变化的局部
+- 不需要一个顶层的 Provider 包裹对象
+- 可以很轻松的给子模块设置独立的状态管理
+- 非常易于使用, 仅有 2 个 API: `setState`、`build`
 
 API 文档:
 

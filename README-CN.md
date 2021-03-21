@@ -2,7 +2,7 @@
 
 consumer 是一个参考 [react-consumer](https://github.com/ymzuiku/react-consumer) 方式的状态管理, 使用 dart 的 `Stream` 做发布订阅.
 
-类 react 项目，当项目到一定程度，必不可少需要一个状态管理器，flutter 有着不少状态管理库，BLOC、Provider、redux 等等；但是他们现有的问题是没有给出很便捷的状态管理优化方案。
+声明式风格的前端项目，当项目到一定程度，必不可少需要一个状态管理器，flutter 有着不少状态管理库，BLOC、Provider、redux 等等；但是他们现有的问题是没有给出很便捷的状态管理优化方案。
 
 consumer 的特点是仅仅是发布订阅模式加 StateFulWidget，这比市面上基于 InheritedWidget 进行封装的状态管理器的优势是它不需要一个顶层的提供者模式的包裹。基于此，consumer 可以让项目更简单创建子模块的独立的状态管理，当然你也可以使用 consumer 的单一模式管理整个项目的状态。
 

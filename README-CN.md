@@ -1,3 +1,5 @@
+若你觉得 Provider 等状态管理太繁琐， consumer 就是为你准备的一款高性能、极简的状态管理库。
+
 consumer 是一个参考 [react-consumer](https://github.com/ymzuiku/react-consumer) 方式的状态管理, 使用 dart 的 `Stream` 做发布订阅.
 
 类 react 项目，当项目到一定程度，必不可少需要一个状态管理器，flutter 有着不少状态管理库，BLOC、Provider、redux 等等；但是他们现有的问题是没有给出很便捷的状态管理优化方案。
@@ -108,7 +110,7 @@ class MyHomePage extends StatelessWidget {
 
 ## 参数 `memo` 的作用是什么？
 
-从 `v2.2.0` 版本开始 `memo` 参数是必传的；
+从 v2.2.0 版本开始 memo 参数是必传的，这是因为作者认为与其等性能出现问题再去优化，不如从编写的时候就强制开发者编写性能已优化的代码。
 
 如果你项目有着非常多的状态订阅，使用 `memo` 可以大幅度提高性能.
 

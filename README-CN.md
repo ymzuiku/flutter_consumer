@@ -1,3 +1,7 @@
+# consumer
+
+[English Document](./README.md)
+
 若你觉得 Provider 等状态管理太繁琐， consumer 就是为你准备的一款高性能、极简的状态管理库。
 
 consumer 是一个参考 [react-consumer](https://github.com/ymzuiku/react-consumer) 方式的状态管理, 使用 dart 的 `Stream` 做发布订阅，配合可变状态的微件（类似于 TextField 组件）进行状态管理.
@@ -26,7 +30,7 @@ API 文档:
 
 ```yaml
 dependencies:
-  consumer: ^2.2.0
+  consumer: ^2.3.0
 ```
 
 ## 入门指南
@@ -359,6 +363,6 @@ consumer.setState((state){
 })
 ```
 
-# That's all
+## That's all
 
 感谢你阅读本文档和使用 `consumer`.

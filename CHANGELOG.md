@@ -1,3 +1,7 @@
+## [2.3.0] - Change to null-safety
+
+move to null-safety
+
 ## [2.2.0] - API CHANGES
 
 memo: change to required

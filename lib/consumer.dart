@@ -13,8 +13,8 @@ import 'package:flutter/material.dart';
 /// build is use _ConsumerWidget create a StatefulWidget, and subscribe consumer at _ConsumerWidget.
 class Consumer<T> {
   final T state;
-  StreamController _controller;
-  Stream stream;
+  late StreamController _controller;
+  late Stream stream;
 
   Consumer(this.state) {
     _controller = StreamController.broadcast();
@@ -22,8 +22,8 @@ class Consumer<T> {
   }
 
   Widget build(Widget Function(BuildContext ctx, T state) builder,
-      {@required List<dynamic> Function(T s) memo}) {
-    return _ConsumerWidget<T>(ctrl: this, memo: memo, builder: builder);
+      {required List<dynamic> Function(T s) memo}) {
+    return _ConsumerWidget<T>(this, builder, memo);
   }
 
   // @Deprecated('remove getState to v2.2.0, use consumer.state replace consumer.getState()')
@@ -48,11 +48,7 @@ class _ConsumerWidget<T> extends StatefulWidget {
   final List<dynamic> Function(T state) memo;
   final Widget Function(BuildContext ctx, T state) builder;
 
-  _ConsumerWidget(
-      {@required this.ctrl,
-      @required this.builder,
-      @required this.memo,
-      Key key})
+  _ConsumerWidget(this.ctrl, this.builder, this.memo, {Key? key})
       : super(key: key);
 
   @override
@@ -61,8 +57,8 @@ class _ConsumerWidget<T> extends StatefulWidget {
 }
 
 class _ConsumerWidgetState<T> extends State<_ConsumerWidget> {
-  StreamSubscription _sub;
-  List<dynamic> _lastMemo;
+  late StreamSubscription _sub;
+  late List<dynamic> _lastMemo;
   final Consumer<T> _ctrl;
   final List<dynamic> Function(T state) _memo;
   final Widget Function(BuildContext ctx, T state) _builder;

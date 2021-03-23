@@ -27,7 +27,7 @@ Change `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  consumer: ^2.2.0
+  consumer: ^2.3.0
 ```
 
 ## Getting Started
@@ -355,6 +355,6 @@ consumer.setState((state){
 })
 ```
 
-# That's all
+## That's all
 
 Thank you read and use consumer

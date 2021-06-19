@@ -2,6 +2,8 @@
 
 [中文文档](./README-CN.md)
 
+**Please use this: [obx](https://pub.dev/packages/obx)**, obx is better to `consumer`.
+
 consumer is like [react-consumer](https://github.com/ymzuiku/react-consumer) state manage, use Stream at dart.
 
 ## Feature

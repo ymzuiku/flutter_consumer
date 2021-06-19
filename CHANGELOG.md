@@ -1,3 +1,5 @@
+## [2.3.1] - Use next package Obx
+
 ## [2.3.0] - Change to null-safety
 
 move to null-safety
